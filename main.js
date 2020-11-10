@@ -1,42 +1,58 @@
 // https://www.mozilla.org/en-US/MPL/2.0/
 
-
+const section = document.querySelector('.section-btns'); //przyciski
 const addBtn = document.querySelector('.add-btn') // button dodający kota
 const startBtn = document.querySelector('.start-btn') //button startujący grę
 const catBoard = document.querySelector('.cat-board'); //flexbox z kotami
 const buttonsContainer = document.querySelector('.btn-container');
-const section = document.querySelector('.section-btns'); //przyciski
+
 let idCounter = 0;
 let win = null;
 
 function downloadCat() { // Funkcja będzie pobierać koty z serwera (fetch api) np. 100 kotów, ale wylosuje tylko 6 i na ich bazie stworzy elementy html.
 
     const catsUrl = "https://api.thecatapi.com/v1/images/search";
-    fetch(catsUrl)
-        .then(response => {
-
+    fetch(catsUrl).then(response => {
             return response.json();
         })
-        .then(json => displayCat(json[0].url)).catch(Error("error"))
-
+        .then(json => displayCat(json[0].url))
 
 }
 
+
 function displayCat(imgUrl) {
     // podanie w funkcji pobranego url, który potem jest umieszczany w css
-    let counter = catBoard.children.length;
-    if (counter >= 5) {
 
-        alert("Osiągnięto maksymalną ilość kotów na planszy !!!")
+    if (catBoard.children.length >= 6) {
+        alert('too many cats')
         return;
     }
+
     const newCat = document.createElement("div");
-    newCat.setAttribute("class", "cat");
+    newCat.setAttribute("class", "cat draggable")
+    /* Loading */
+    const loading = document.createElement('div')
+    loading.setAttribute("class", "lds-ring")
+    newCat.appendChild(loading);
+    for (let i = 0; i < 4; i++) {
+        const emptyDiv = document.createElement('div');
+        loading.appendChild(emptyDiv);
+    }
+
+    let image = new Image();
+    image.src = imgUrl
+    image.onload = function () {
+        loading.remove();
+    }
+    /* Loading */
+
+
     newCat.setAttribute("id", idCounter++);
-    newCat.classList.add("draggable");
-    newCat.style.backgroundImage = "url(" + imgUrl + ")";
+    newCat.style.backgroundImage = "url(" + image.src + ")";
+
+
+
     catBoard.appendChild(newCat);
-    newCat.style.order = counter;
 
 }
 
@@ -53,11 +69,7 @@ function drawStopwatch() {
 
 }
 
-
 /* Stoper */
-
-
-
 
 function stopwatch() {
 
