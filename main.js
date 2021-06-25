@@ -74,7 +74,7 @@ function stopwatch() {
   const timerSecs = setInterval(() => {
     const totaltime = parseInt(secondsHandler.textContent + milisecondsHandler.textContent) / 100;
 
-    if (totaltime >= maxtime && win === false) {
+    if (totaltime >= maxtime && win !== false) {
       clearInterval(timerSecs);
       document.removeEventListener("mousemove", onMouseMove);
       document.removeEventListener("mouseup", onMouseUp);
